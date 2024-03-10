@@ -89,7 +89,6 @@ public class Day1 {
         int result = input.stream().map(this::part2).map(Integer::parseInt).reduce(0, Integer::sum);
         System.out.println("Result of day 1 part 2: " + result);
     }
-
     public static void main (String[] args) {
         Day1 day1Part1 = new Day1();
 
@@ -117,4 +116,5 @@ public class Day1 {
         day1Part1.findResult();
 //        day1Part1.part2("two1nine");
     }
+
 }
