@@ -1,9 +1,7 @@
 package adventOfCode.Day2;
 
-import adventOfCode.Day1.Day1;
-import adventOfCode.Util.InputReader;
 
-import java.util.ArrayList;
+import adventOfCode.Util.InputReader;
 import java.util.List;
 import java.util.Map;
 

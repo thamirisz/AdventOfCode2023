@@ -19,85 +19,83 @@ public class Day1 {
             "nine", "9"
     );
 
-    public String getCalibrationValue(String calibrationValue) {
-        int cur = 0;
-        int lastNumber = 0;
-        boolean firstNumberEncounter = false;
-        for (Character c : calibrationValue.toCharArray()) {
-            if (Character.isDigit(c)) {
-                if (!firstNumberEncounter) {
-                    cur += Integer.parseInt(String.valueOf(c));
-                    firstNumberEncounter = true;
-                }
-                lastNumber = Integer.parseInt(String.valueOf(c));
-            }
-        }
-        cur = cur * 10;
-        cur += lastNumber;
-        return Integer.toString(cur);
-    }
-
-    public String part2(String input) {
-        var test = input.toCharArray();
-        int cur = 0;
-        int lastNumber = 0;
-        boolean firstNumberEncounter = false;
-        for (int i = 0; i < test.length; i++) {
-            if (Character.isDigit(test[i])) {
-                if (!firstNumberEncounter) {
-                    cur += Integer.parseInt(String.valueOf(test[i]));
-                    firstNumberEncounter = true;
-                } else {
-                    lastNumber = Integer.parseInt(String.valueOf(test[i]));
-                }
+    public Integer getFirstDigit (String calibrationValue) {
+        int firstNumber = 0;
+        char[] array = calibrationValue.toCharArray();
+        for (int i = 0; i < array.length; i++) {
+            if (Character.isDigit(array[i])) {
+                    firstNumber = Integer.parseInt(String.valueOf(array[i]));
+                    break;
             } else {
-                StringBuilder curNumber = new StringBuilder();
-                curNumber.append(test[i]);
-                for (int j = i; j <= test.length; j++) {
-                    if (myMap.containsKey(curNumber.toString())) {
-                        if (!firstNumberEncounter) {
-                            cur += Integer.parseInt(myMap.get(curNumber.toString()));
-                            firstNumberEncounter = true;
-                        } else {
-                            lastNumber = Integer.parseInt(myMap.get(curNumber.toString()));
-                        }
+                StringBuilder firstStringNumber = new StringBuilder();
+                firstStringNumber.append(array[i]);
+                for (int j = i + 1; j < array.length; j++) {
+                    if (myMap.containsKey(firstStringNumber.toString())) {
+                        firstNumber = Integer.parseInt(myMap.get(firstStringNumber.toString()));
                         break;
                     } else {
-                        if (j == test.length) {
-                            break;
-                        }
-                        if (j != i) {
-                            curNumber.append(test[j]);
-                        }
+                        firstStringNumber.append(array[j]);
                     }
+                }
+                if (firstNumber != 0) {
+                    break;
                 }
             }
         }
-        if (lastNumber == 0) {
-            lastNumber = cur;
-        }
-        cur = cur * 10;
+        return firstNumber;
+    }
 
-        cur += lastNumber;
-//        System.out.println(cur);
-        return Integer.toString(cur);
+    public Integer getLastDigit (String calibrationValue) {
+        int lastNumber = 0;
+        char[] array = calibrationValue.toCharArray();
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (Character.isDigit(array[i])) {
+                lastNumber = Integer.parseInt(String.valueOf(array[i]));
+                break;
+            } else {
+                StringBuilder lastStringNumber = new StringBuilder();
+                lastStringNumber.append(array[i]);
+                for (int j = i - 1; j >= 0; j--) {
+                    StringBuilder reverseVersion = new StringBuilder();
+                    for (var s : lastStringNumber.toString().toCharArray()) {
+                        reverseVersion.append(s);
+                    }
+                    String lastNumberFind = reverseVersion.reverse().toString();
+                    if (myMap.containsKey(lastNumberFind)) {
+                        lastNumber = Integer.parseInt(myMap.get(lastNumberFind));
+                        break;
+                    } else {
+                        lastStringNumber.append(array[j]);
+                    }
+                }
+                if (lastNumber != 0) {
+                    break;
+                }
+            }
+        }
+        return lastNumber;
+    }
+
+    public String getCalibrationValues (String calibrationValue) {
+        int firstNumber = getFirstDigit(calibrationValue);
+        int lastNumber = getLastDigit(calibrationValue);
+        return Integer.toString((firstNumber * 10) + lastNumber);
     }
 
     public void findResult() {
         List<String> input = InputReader.readInputByLine("/Users/thamiriszhang/Desktop/AdventOfCode2023/src/resources/adventofcode.day1/input.tcv", this.getClass());
 
-        int result = input.stream().map(this::part2).map(Integer::parseInt).reduce(0, Integer::sum);
+        int result = input.stream().map(this::getCalibrationValues).map(Integer::parseInt).reduce(0, Integer::sum);
         System.out.println("Result of day 1 part 2: " + result);
     }
     public static void main (String[] args) {
         Day1 day1Part1 = new Day1();
 
-//        List<String> test = new ArrayList<String>();
-//        test.add("1abc2");
-//        test.add("pqr3stu8vwx");
-//        test.add("a1b2c3d4e5f");
-//        test.add("treb7uchet");
-//        day1Part1.getCalibrationValues(test);
+//      List<String> test = new ArrayList<String>();
+//      test.add("1abc2");
+//      test.add("pqr3stu8vwx");
+//      test.add("a1b2c3d4e5f");
+//      test.add("treb7uchet");
         List<String> test2 = new ArrayList<String>();
         test2.add("two1nine");
         test2.add("eightwothree");
@@ -108,13 +106,13 @@ public class Day1 {
         test2.add("7pqrstsixteen");
         test2.add("treb7uchet");
 
-        for (var s : test2) {
-            var t = day1Part1.part2(s);
-            System.out.println(t);
-        }
+//      for (var s : test2) {
+//          var t = day1Part1.getCalibrationValues(s);
+//          System.out.println(t);
+//      }
 
         day1Part1.findResult();
-//        day1Part1.part2("two1nine");
+//      day1Part1.part2("two1nine");
     }
 
 }
