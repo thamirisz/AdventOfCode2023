@@ -1,7 +1,8 @@
 package adventOfCode.Day2;
 
-
 import adventOfCode.Util.InputReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,63 +14,109 @@ public class Day2 {
             "blue", 14
     );
 
-    public int getValidPossibleGames (String game) {
-        int curGame = 0;
-        char[] array = game.toCharArray();
-
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == ':') {
-                curGame = Integer.parseInt(String.valueOf(array[i - 1]));
-                if (Character.isDigit(array[i - 2])) {
-                    for (int k = i - 2; k >= 0; k--) {
-                        if (Character.isDigit(array[k])) {
-                            if (curGame == 0 && Integer.parseInt(String.valueOf(array[k])) == 0 && Integer.parseInt(String.valueOf(array[k - 1])) == 0) {
-                                curGame = 100;
-                            }
-                            int value = Integer.parseInt(String.valueOf(array[k])) * 10;
-                            curGame = value + curGame;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            } else if (array[i] == ',' || array[i] == ';' || i == array.length - 1) {
-                StringBuilder sb = new StringBuilder();
-                for (int j = i == array.length - 1 ? i : i - 1; j >= 0; j--) {
-                    if (Character.isDigit(array[j])) {
-                        int curDigit = Integer.parseInt(String.valueOf(array[j]));
-                        if (Character.isDigit(array[j - 1])) {
-                            for (int k = j - 1; k >= 0; k--) {
-                                if (Character.isDigit(array[k])) {
-                                    int value = Integer.parseInt(String.valueOf(array[k])) * 10;
-                                    curDigit = value + curDigit;
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-                        String curKey = sb.reverse().toString();
-                        if (curDigit <= validCubes.get(curKey)) {
-                           break;
-                        } else {
-                            return 0;
-                        }
-                    } else if (array[j] == ' ') {
-                        continue;
-                    } else {
-                        sb.append(array[j]);
-                    }
+    private Map<String, List<Integer>> parseString (String game) {
+        Map<String, List<Integer>> map = new HashMap<>();
+        var splitedString = game.replaceAll(" ", "").split(":");
+        var gameNumber = splitedString[0].toCharArray();
+        var gameVariety = splitedString[1].toCharArray();
+        int gameN = -1;
+        for (int i = 0; i < gameNumber.length; i++) {
+            if (Character.isDigit(gameNumber[i])) {
+                if (gameN == -1) {
+                    gameN = Integer.parseInt(String.valueOf(gameNumber[i]));
+                } else {
+                    gameN *= 10;
+                    gameN += Integer.parseInt(String.valueOf(gameNumber[i]));
                 }
             }
         }
-        return curGame;
+        map.put("game", List.of(gameN));
+        List<Integer> red = new ArrayList<>();
+        List<Integer> blue = new ArrayList<>();
+        List<Integer> green = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        int curNumber = -1;
+        for (int i = 0; i < gameVariety.length; i++) {
+            if (Character.isDigit(gameVariety[i])) {
+                if (curNumber == -1) {
+                    curNumber = Integer.parseInt(String.valueOf(gameVariety[i]));
+                } else {
+                    curNumber *= 10;
+                    curNumber += Integer.parseInt(String.valueOf(gameVariety[i]));
+                }
+            } else if (gameVariety[i] == ',' || gameVariety[i] == ';') {
+                continue;
+            } else {
+                sb.append(gameVariety[i]);
+                if (sb.toString().equals("red")) {
+                    red.add(curNumber);
+                    curNumber = -1;
+                    sb.delete(0, sb.length());
+                } else if (sb.toString().equals("blue")) {
+                    blue.add(curNumber);
+                    curNumber = -1;
+                    sb.delete(0, sb.length());
+                } else if (sb.toString().equals("green")) {
+                    green.add(curNumber);
+                    curNumber = -1;
+                    sb.delete(0, sb.length());
+                }
+            }
+        }
+        map.put("red", red);
+        map.put("blue", blue);
+        map.put("green", green);
+        return map;
+    }
+
+    public int getValidGames (String game) {
+        Map<String, List<Integer>> map = parseString(game);
+        for (int i : map.get("red")) {
+            if (i > validCubes.get("red")) {
+                return 0;
+            }
+        }
+        for (int i : map.get("blue")) {
+            if (i > validCubes.get("blue")) {
+                return 0;
+            }
+        }
+        for (int i : map.get("green")) {
+            if (i > validCubes.get("green")) {
+                return 0;
+            }
+        }
+        return map.get("game").get(0);
+    }
+
+    public int getValidGamesPart2 (String game) {
+        int red = 1;
+        int blue = 1;
+        int green = 1;
+        Map<String, List<Integer>> map = parseString(game);
+        for (int i : map.get("red")) {
+            if (i > red) {
+                red = i;
+            }
+        }
+        for (int i : map.get("blue")) {
+            if (i > blue) {
+                blue = i;
+            }
+        }
+        for (int i : map.get("green")) {
+            if (i > green) {
+                green = i;
+            }
+        }
+        return red * blue * green;
     }
 
     public void findResult() {
         List<String> input = InputReader.readInputByLine("/Users/thamiriszhang/Desktop/AdventOfCode2023/src/resources/day2/input.tcv", this.getClass());
 
-        int result = input.stream().map(this::getValidPossibleGames).reduce(0, Integer::sum);
-        System.out.println("Result of day 2 part 1: " + result);
+        int result = input.stream().map(this::getValidGamesPart2).reduce(0, Integer::sum);
+        System.out.println("Result of day 2 part 2: " + result);
     }
     public static void main (String[] args) {
         Day2 day2Part1 = new Day2();
@@ -82,9 +129,12 @@ public class Day2 {
 //        test1.add("Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green");
 //
 //        int result = 0;
+//        int cur = 0;
 //        for (var game : test1) {
-//            result += day2Part1.getValidPossibleGames(game);
-////            System.out.println(result);
+//            cur = day2Part1.getValidGamesPart2(game);
+//            if (cur != 0) {
+//                result += cur;
+//            }
 //        }
 //        System.out.println(result);
         day2Part1.findResult();

@@ -1,7 +1,6 @@
 package adventOfCode.Day1;
 
 import adventOfCode.Util.InputReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class Day1 {
                     break;
             } else {
                 int end = i + 5 <= array.length ? i + 5 : array.length;
-                firstNumber = checkIfLetterIsNumber(calibrationValue.substring(i, end));
+                firstNumber = checkIfLetterIsNumber(calibrationValue.substring(i, end), false);
                 if (firstNumber != 0) {
                     return firstNumber;
                 }
@@ -46,7 +45,8 @@ public class Day1 {
                 break;
             } else {
                 int start = i - 4 >= 0 ? i - 4 : 0;
-                lastNumber = checkIfLetterIsNumber(calibrationValue.substring(start, i + 1));
+                String reversedString = reverseString(calibrationValue.substring(start, i + 1));
+                lastNumber = checkIfLetterIsNumber(reversedString, true);
                 if (lastNumber != 0) {
                     return lastNumber;
                 }
@@ -55,14 +55,36 @@ public class Day1 {
         return lastNumber;
     }
 
-    private int checkIfLetterIsNumber (String letter) {
+    private String reverseString(String value) {
+        int i = 0, j = value.length() - 1;
+        char[] array = value.toCharArray();
+        while (i < j) {
+            char tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
+            i++;
+            j--;
+        }
+        return array.toString();
+    }
+    private int checkIfLetterIsNumber (String letter, boolean isReversedString) {
+
         for (int i = 0; i < letter.length(); i++) {
-            if (i + 3 <= letter.length() && myMap.containsKey(letter.substring(i, i + 3))) {
-                return myMap.get(letter.substring(i, i + 3));
-            } else if (i + 4 <= letter.length() && myMap.containsKey(letter.substring(i, i + 4))){
-                return myMap.get(letter.substring(i, i + 4));
-            } else if (i + 5 <= letter.length() && myMap.containsKey(letter.substring(i, i + 5))) {
-                return myMap.get(letter.substring(i, i + 5));
+            if (i + 3 <= letter.length()
+                    && (isReversedString
+                    ? myMap.containsKey(reverseString(letter.substring(i, i + 3)))
+                    : myMap.containsKey(letter.substring(i, i + 3)))) {
+                return isReversedString ? myMap.get(reverseString(letter.substring(i, i + 3))) : myMap.get(letter.substring(i, i + 3));
+            } else if (i + 4 <= letter.length()
+                    && (isReversedString
+                    ? myMap.containsKey(reverseString(letter.substring(i, i + 4)))
+                    : myMap.containsKey(letter.substring(i, i + 4)))){
+                return isReversedString ? myMap.get(reverseString(letter.substring(i, i + 4))) : myMap.get(letter.substring(i, i + 4));
+            } else if (i + 5 <= letter.length()
+                    && (isReversedString
+                    ? myMap.containsKey(reverseString(letter.substring(i, i + 5)))
+                    : myMap.containsKey(letter.substring(i, i + 5)))) {
+                return isReversedString ? myMap.get(reverseString(letter.substring(i, i + 5))) : myMap.get(letter.substring(i, i + 5));
             }
         }
         return 0;
