@@ -65,6 +65,7 @@ public class Day1 {
             i++;
             j--;
         }
+//        sdsd;
         return array.toString();
     }
     private int checkIfLetterIsNumber (String letter, boolean isReversedString) {
