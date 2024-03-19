@@ -138,6 +138,5 @@ public class Day2 {
 //        }
 //        System.out.println(result);
         day2Part1.findResult();
-
     }
 }
