@@ -1,4 +1,4 @@
-package adventOfCode.Util;
+package adventOfCode.Day3;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +31,8 @@ public class AocSolution {
         }
 
         return grid;
+
+        // Example: return rawLines.get(0);
     }
 
     private String solve(final Object d) {
@@ -45,6 +47,21 @@ public class AocSolution {
         return null;
     }
 
+    public Object generateGrid () {
+        ArrayList<String> rawLines = new ArrayList<>();
+        try {
+            final File file = new File(this.fileName);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                final String line = scanner.nextLine();
+                rawLines.add(line);
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        final Object data = parseFile(rawLines);
+        return data;
+    }
     public void execute() {
         ArrayList<String> rawLines = new ArrayList<>();
         try {

@@ -1,7 +1,5 @@
 package adventOfCode.Day3;
 
-import adventOfCode.Util.AocSolution;
-
 import java.util.*;
 
 public class Day3 {
@@ -12,7 +10,6 @@ public class Day3 {
                 {1, -1}, {1, 0}, {1, 1}
             };
 
-    Set<int[]> starPosition = new HashSet<>();
     Map<int[], List<Integer>> starMap = new HashMap<>();
 
     private boolean isSymbol (char[][] grid, int row, int column) {
@@ -23,12 +20,13 @@ public class Day3 {
         return grid[row][column] == '*';
     }
 
-    private int getGearRations(char[][] grid) {
+    private int[] getGearRations(char[][] grid) {
         int total = 0;
         for (int row = 0; row < grid.length; row++) {
             boolean isAdjacentNumber = false;
             boolean isStar = false;
             int curNumber = 0;
+            Set<int[]> starPositions = new HashSet<>();
             for (int column = 0; column < grid[0].length; column++) {
                 if (Character.isDigit(grid[row][column])) {
                     if (curNumber == 0) {
@@ -48,7 +46,7 @@ public class Day3 {
                                 if (isStar(grid, nextRow, nextColumn)) {
                                     isStar = true;
                                     int[] position = {nextRow, nextColumn};
-                                    starPosition.add(position);
+                                    starPositions.add(position);
                                 }
                             }
                         }
@@ -57,40 +55,54 @@ public class Day3 {
                     if (curNumber != 0) {
                         if (isAdjacentNumber) {
                             total += curNumber;
-                        }
-
-                        if (isStar) {
-                            int[] position = {row, column};
-                            if (!starMap.containsKey(position)) {
-                                List<Integer> list = new ArrayList<>();
-                                list.add(curNumber);
-                                starMap.put(position, list);
-                            } else {
-                                List<Integer> list = starMap.get(position);
-                                list.add(curNumber);
-                                starMap.put(position, list);
+                            if (isStar) {
+                                for (int[] starPosition : starPositions) {
+                                    boolean isStartPositionExist = false;
+                                    for (int[] keySet : starMap.keySet()) {
+                                        if (keySet[0] == starPosition[0] && keySet[1] == starPosition[1]) {
+                                            List<Integer> list = starMap.get(keySet);
+                                            list.add(curNumber);
+                                            starMap.put(keySet, list);
+                                            isStartPositionExist = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isStartPositionExist) {
+                                        List<Integer> list = new ArrayList<>();
+                                        list.add(curNumber);
+                                        starMap.put(starPosition, list);
+                                    }
+                                }
                             }
                         }
                         curNumber = 0;
                         isAdjacentNumber = false;
                         isStar = false;
+                        starPositions.clear();
                     }
                 }
             }
             if (curNumber != 0) {
                 if (isAdjacentNumber) {
                     total += curNumber;
-                }
-                if (isStar) {
-                    int[] position = {row, grid[0].length - 1};
-                    if (!starMap.containsKey(position)) {
-                        List<Integer> list = new ArrayList<>();
-                        list.add(curNumber);
-                        starMap.put(position, list);
-                    } else {
-                        List<Integer> list = starMap.get(position);
-                        list.add(curNumber);
-                        starMap.put(position, list);
+                    if (isStar) {
+                        for (int[] starPosition : starPositions) {
+                            boolean isStartPositionExist = false;
+                            for (int[] keySet : starMap.keySet()) {
+                                if (keySet[0] == starPosition[0] && keySet[1] == starPosition[1]) {
+                                    List<Integer> list = starMap.get(keySet);
+                                    list.add(curNumber);
+                                    starMap.put(keySet, list);
+                                    isStartPositionExist = true;
+                                    break;
+                                }
+                            }
+                            if (!isStartPositionExist) {
+                                List<Integer> list = new ArrayList<>();
+                                list.add(curNumber);
+                                starMap.put(starPosition, list);
+                            }
+                        }
                     }
                 }
             }
@@ -99,7 +111,7 @@ public class Day3 {
         int result = 0;
         for (Map.Entry<int[], List<Integer>> entry : starMap.entrySet()) {
             List<Integer> list = entry.getValue();
-            if (list.size() == 2) {
+            if (list.size() >= 2) {
                 int firstValue = list.get(0);
                 int secondValue = list.get(1);
                 int sum = firstValue * secondValue;
@@ -107,13 +119,14 @@ public class Day3 {
             }
         }
 
-        return result;
+        return new int[] {total, result};
     }
     public void findResult() {
         final AocSolution aoc = new AocSolution("/Users/thamiriszhang/Desktop/AdventOfCode2023/src/resources/day3/input.txt");
         char[][] grid = (char[][]) aoc.generateGrid();
-        int result = getGearRations(grid);
-        System.out.println("Result of day 3 part 1: " + result);
+        int[] result = getGearRations(grid);
+        System.out.println("Result of day 3 part 1 and 1: " + result[0]);
+        System.out.println("Result of day 3 part 1 and 2: " + result[1]);
     }
     public static void main (String[] args) {
         Day3 day3Part1 = new Day3();
