@@ -113,7 +113,7 @@ public class Day2 {
     }
 
     public void findResult() {
-        List<String> input = InputReader.readInputByLine("/Users/thamiriszhang/Desktop/AdventOfCode2023/src/resources/day2/input.tcv", this.getClass());
+        List<String> input = InputReader.readInputByLine("src/resources/day2/input.tcv", this.getClass());
 
         int result = input.stream().map(this::getValidGamesPart2).reduce(0, Integer::sum);
         System.out.println("Result of day 2 part 2: " + result);

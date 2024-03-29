@@ -84,7 +84,7 @@ public class Day4 {
     }
 
     public void findResult() {
-        List<String> input = InputReader.readInputByLine("/Users/thamiriszhang/Desktop/AdventOfCode2023/src/resources/day4/input.txt", this.getClass());
+        List<String> input = InputReader.readInputByLine("src/resources/day4/input.txt", this.getClass());
         int result = input.stream().map(this::getResult).reduce(0, Integer::sum);
         System.out.println("Result of day 4 part 1: " + result);
         int result2 = getResult2();

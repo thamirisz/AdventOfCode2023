@@ -3,6 +3,7 @@ package adventOfCode.Day5;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -107,6 +108,7 @@ public class Day5 {
     }
 
     public List<Long[]> nextRange(Long start, Long end, List<Mapping> mappings) {
+        System.out.println("call next range:" + start + "," + end);
         List<Long[]> ranges = new ArrayList<>();
 
         if (start < mappings.get(0).start) {
@@ -117,12 +119,16 @@ public class Day5 {
         for (Mapping m : mappings) {
             if (start > m.end) continue;
             if (end < m.start) break;
+            //numbers that are not in the range
             if (start < m.start) {
                 ranges.add(new Long[]{start, m.start - 1});
                 start = m.start;
             }
+            //numbers that are in the range
             Long maxRange = Math.min(m.end - start, end - start);
             ranges.add(new Long[]{start + m.offset, start + maxRange + m.offset});
+            // example, 46 , 60,. but only end in 57
+            //example: start: 57, 60
             start += maxRange;
         }
 
@@ -130,6 +136,11 @@ public class Day5 {
             ranges.add(new Long[]{Math.max(start, mappings.get(mappings.size() - 1).end + 1), end});
         }
 
+        System.out.print("result: ");
+        ranges.forEach(range -> {
+            System.out.print(Arrays.toString(range) + " ");
+        });
+        System.out.println("");
         return ranges;
     }
 
@@ -165,12 +176,15 @@ public class Day5 {
                 }
                 ranges = newRanges;
             }
-            part2 = Math.min(part2, ranges.stream().mapToLong(r -> r[0]).min().orElse(Integer.MAX_VALUE));
+            part2 = Math.min(part2, ranges.stream().mapToLong(r -> r[0]).min().orElse(-1));
+            System.out.print("final ranges: ");
+            ranges.forEach(range -> {
+                System.out.print(Arrays.toString(range) + " ");
+            });
+            System.out.println("");
         }
         return part2;
     }
-
-
 
     public void execute() {
         ArrayList<String> rawLines = new ArrayList<>();
@@ -209,7 +223,7 @@ public class Day5 {
     }
 
     public static void main(String[] args) {
-        String[] files = new String[] {"/Users/thamiriszhang/Desktop/AdventOfCode2023/src/resources/day5/input.txt", "data.txt"};
+        String[] files = new String[] {"src/resources/day5/input.txt", "data.txt"};
         for (String filename : files) {
             final Day5 day5 = new Day5(filename);
             day5.execute();
