@@ -122,7 +122,7 @@ public class Day3 {
         return new int[] {total, result};
     }
     public void findResult() {
-        final AocSolution aoc = new AocSolution("src/resources/day3/input.txt");
+        final AocSolution aoc = new AocSolution("src/advent_of_code_2023/Day3/input.txt");
         char[][] grid = (char[][]) aoc.generateGrid();
         int[] result = getGearRations(grid);
         System.out.println("Result of day 3 part 1 and 1: " + result[0]);

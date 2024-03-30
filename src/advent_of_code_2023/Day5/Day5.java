@@ -223,7 +223,7 @@ public class Day5 {
     }
 
     public static void main(String[] args) {
-        String[] files = new String[] {"src/resources/day5/input.txt", "data.txt"};
+        String[] files = new String[] {"src/advent_of_code_2023/Day5/input.txt"};
         for (String filename : files) {
             final Day5 day5 = new Day5(filename);
             day5.execute();

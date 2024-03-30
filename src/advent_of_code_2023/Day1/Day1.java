@@ -98,7 +98,7 @@ public class Day1 {
     }
 
     public void findResult() {
-        List<String> input = InputReader.readInputByLine("src/resources/adventofcode.day1/input.tcv", this.getClass());
+        List<String> input = InputReader.readInputByLine("src/advent_of_code_2023/Day1/input.tcv", this.getClass());
 
         int result = input.stream().map(this::getCalibrationValues).reduce(0, Integer::sum);
         System.out.println("Result of day 1 part 2: " + result);
