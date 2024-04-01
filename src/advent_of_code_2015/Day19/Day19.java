@@ -45,6 +45,7 @@ public class Day19 {
     }
 
     private int part2 (Map<String, List<String>> map, String message) {
+        System.out.println(map);
         Deque<String> deque = new ArrayDeque<>();
         Set<String> visited = new HashSet<>();
         deque.addLast("e");
@@ -126,6 +127,7 @@ public class Day19 {
                             }
                         }
                     }
+                    System.out.println(step + " " + visited.size());
                 }
                 curSize--;
             }
@@ -151,7 +153,7 @@ public class Day19 {
         System.out.println(replacements);
 
         Set<String> visited = new HashSet<>();
-        Queue<String> q = new LinkedList<>();
+        PriorityQueue<String> q = new PriorityQueue<>();
         q.add(target);
 
         int step = 0;
