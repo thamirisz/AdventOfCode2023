@@ -19,10 +19,10 @@ public class Day3 {
         //traditional equals is comparing object references
         //for hashmap and hashset we need to implement our own equals method to compare based on x and y coordinates
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Point point = (Point) o;
+        public boolean equals(Object another) {
+            if (this == another) return true;
+            if (another == null || getClass() != another.getClass()) return false;
+            Point point = (Point) another;
             return x == point.x &&
                     y == point.y;
         }
@@ -51,8 +51,6 @@ public class Day3 {
     }
     private String fileName;
 
-    Map<Point, Integer> gifts = new HashMap<>();
-
     public Day3(final String fileName) {
         this.fileName = fileName;
         createFileIfNotExist(fileName);
@@ -63,43 +61,78 @@ public class Day3 {
     }
 
     public Map<Point, Integer> deliver(String data) {
+        Map<Point, Integer> gifts = new HashMap<>();
         Point startPoint = new Point(0, 0);
         gifts.put(startPoint, 1);
-        int curX = 0;
-        int curY = 0;
+
+        int curr_x = 0;
+        int curr_y = 0;
 
         for (char ch : data.toCharArray()) {
             if (ch == '<') {
-                curX -= 1;
+                curr_x -= 1;
             } else if (ch == '>') {
-                curX += 1;
+                curr_x += 1;
             } else if (ch == '^') {
-                curY -= 1;
+                curr_y -= 1;
             } else {
-                curY += 1;
+                curr_y += 1;
             }
-            Point currentPoint = new Point(curX, curY);
+            Point currentPoint = new Point(curr_x, curr_y);
             gifts.put(currentPoint, gifts.getOrDefault(currentPoint, 0) + 1);
         }
         return gifts;
     }
 
-    private Object[] solve(String data) {
-//        int size = deliver(data).size();
-        Map<Point, Integer> robotMap = new HashMap<>();
-        List<Character> santa = new ArrayList<>();
-        List<Character> robot = new ArrayList<>();
+    public Set<Point> robot(String data) {
+        Set<Point> gifts = new HashSet<>();
+        Map<Point, Integer> map = new HashMap<>();
+        Point startPoint = new Point(0, 0);
+        gifts.add(startPoint);
+        map.put(startPoint, 1);
         char[] array = data.toCharArray();
+        int x = 0;
+        int y = 0;
+        int a = 0;
+        int b = 0;
+
         for (int i = 0; i < array.length; i++) {
             if (i % 2 == 0) {
-                santa.add(array[i]);
+                char ch = array[i];
+                if (ch == '<') {
+                    x -= 1;
+                } else if (ch == '>') {
+                    x += 1;
+                } else if (ch == '^') {
+                    y -= 1;
+                } else {
+                    y += 1;
+                }
+                gifts.add(new Point(x, y));
+                map.put(new Point(x, y), map.getOrDefault(new Point(x, y), 0) + 1);
             } else {
-                robot.add(array[i]);
+                char ch = array[i];
+                if (ch == '<') {
+                    a -= 1;
+                } else if (ch == '>') {
+                    a += 1;
+                } else if (ch == '^') {
+                    b -= 1;
+                } else {
+                    b += 1;
+                }
+                gifts.add(new Point(a, b));
+                map.put(new Point(a, b), map.getOrDefault(new Point(a, b), 0) + 1);
             }
+
         }
-//        var t = deliver(santa.toString());
-//        var r = deliver(robot.toString());
-        return new Object[] {0, gifts.size()};
+        return gifts;
+    }
+
+    private Object[] solve(String data) {
+        var part1 = deliver(data);
+        var part2 = robot(data);
+        return new Object[] {part1.size(), part2.size()};
     }
 
     public void execute() {
