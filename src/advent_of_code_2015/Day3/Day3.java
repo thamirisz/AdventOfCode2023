@@ -175,8 +175,8 @@ public class Day3 {
     public static void main(String[] args) {
         String[] files = new String[] {"src/advent_of_code_2015/Day3/input.txt"};
         for (String filename : files) {
-            final Day3 day2 = new Day3(filename);
-            day2.execute();
+            final Day3 day3 = new Day3(filename);
+            day3.execute();
         }
     }
 }
