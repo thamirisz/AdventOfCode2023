@@ -47,7 +47,34 @@ public class Day5 {
                 part1_totalNiceStrings++;
             }
         }
-        return new Object[] {part1_totalNiceStrings};
+
+        int part2_totalNiceStrings = 0;
+        for (String string : data) {
+            Map<String, int[]> pairs = new HashMap<>();
+            boolean repetition = false;
+            for (int i = 1; i < string.length(); i++) {
+                String pair = string.substring(i - 1, i + 1);
+                if (!pairs.containsKey(pair)) {
+                    //store the index
+                    pairs.put(pair, new int[]{i, i});
+                } else {
+                    //update the index
+                    pairs.get(pair)[1] = i;
+                }
+
+                if (i < string.length() - 1 && string.charAt(i - 1) == string.charAt(i + 1)) {
+                    repetition = true;
+                }
+            }
+            for (int[] indices : pairs.values()) {
+                if (indices[1] - indices[0] > 1 && repetition) {
+                    part2_totalNiceStrings++;
+                    break;
+                }
+            }
+
+        }
+        return new Object[] {part1_totalNiceStrings, part2_totalNiceStrings};
     }
 
     public void execute() {
@@ -71,7 +98,7 @@ public class Day5 {
         double solvingTime = (System.nanoTime() - start) / 1000000.;
         System.out.println(String.format("Solving time for %s: %.3fms", this.fileName, solvingTime));
         System.out.println(String.format("Final Result for %s: %s", this.fileName, "Result 1:" + result[0]));
-//        System.out.println(String.format("Final Result for %s: %s", this.fileName, "Result 2: " + result[1]));
+        System.out.println(String.format("Final Result for %s: %s", this.fileName, "Result 2: " + result[1]));
     }
 
 
