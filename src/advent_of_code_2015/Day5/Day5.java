@@ -101,7 +101,6 @@ public class Day5 {
         System.out.println(String.format("Final Result for %s: %s", this.fileName, "Result 2: " + result[1]));
     }
 
-
     /**
      * Create a file if it does not exist.
      */
