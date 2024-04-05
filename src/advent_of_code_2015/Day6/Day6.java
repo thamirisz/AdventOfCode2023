@@ -16,7 +16,6 @@ public class Day6 {
     private int[][] grid = new int[1000][1000];
     private int[][] grid2 = new int[1000][1000];
 
-
     private static List<Object> parseFile(List<String> rawLines) {
         List<Object> L = new ArrayList<>();
         for (var line : rawLines) {
@@ -65,6 +64,7 @@ public class Day6 {
         }
         return total;
     }
+
     private int part2 (List<Object> data) {
         for (var curObject : data) {
             List<?> curList = (List<?>) curObject;
