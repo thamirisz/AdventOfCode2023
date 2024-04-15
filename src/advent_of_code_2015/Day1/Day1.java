@@ -3,7 +3,6 @@ package advent_of_code_2015.Day1;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Day1 {
