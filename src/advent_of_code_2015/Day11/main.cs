@@ -5,15 +5,16 @@ class Program
 {
     static void Main()
     {   
-        string password = "cqjxxyzz";
-        // while (!IsValidPassword(password))
-        // {
-        password = IncrementPassword(password);
+        string password = "cqjxjnds";
+      
         while (!IsValidPassword(password))
         {
             password = IncrementPassword(password);
-        }
+        // while (!IsValidPassword(password))
+        // {
+            //password = IncrementPassword(password);
         //}
+        }
 
         Console.WriteLine(password);
     }
@@ -30,6 +31,9 @@ class Program
         bool hasStraight = false;
         for (int i = 0; i < password.Length - 2; i++)
         {
+            //C# and Java implicitly converts password[i + 1] to an int for the comparison. So it’s really comparing numbers:
+            //Console.WriteLine(password[i + 1]);
+           // Console.WriteLine(password[i] + 1);
             if (password[i + 1] == password[i] + 1 && password[i + 2] == password[i] + 2)
             {
                 hasStraight = true;
@@ -66,8 +70,10 @@ class Program
                 i--;
             }
             else
-            {
+            {   
+                //Console.WriteLine(chars[i]);
                 chars[i]++;
+                //Console.WriteLine(chars[i]);
                 break;
             }
         }
